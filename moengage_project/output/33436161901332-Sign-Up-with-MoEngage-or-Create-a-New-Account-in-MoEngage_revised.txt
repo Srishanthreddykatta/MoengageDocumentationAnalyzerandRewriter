@@ -1,0 +1,73 @@
+User Guide
+
+Getting Started
+
+Initial Setup
+
+Sign Up to Unlock MoEngage's Features
+
+Sign up to start connecting with your customers and improving your business. You will need to create an account in MoEngage based on your business needs. For example, you will need to decide what type of account aligns with your business needs (e.g., small business, enterprise).
+
+library_add_check
+
+Prerequisites
+You must have a valid subscription code from MoEngage. Contact your sales representative at MoEngage to obtain your subscription code. Example: `SUBSC-1234-ABCD`
+
+Create a New Accountlink
+Click this link to begin: [Direct Link to relevant sign up page]. If you're not automatically directed to the correct signup page, please contact support. This will take you to the signup page.
+
+You can complete your account creation using one of the following methods:
+
+Using a password
+Using your Google account
+
+Using a Passwordlink
+
+To create a new account using a password:
+
+1.  Visit the following URL:
+    `https://dashboard-0X.moengage.com/v4/#/auth/signup`
+    Replace 'X' in the URL with your data center number (DC), which can be found here: [link]. MoEngage hosts each customer in a different DC. You can find your DC number (value of X) and replace the value of 'X' in the URL by referring to the DC and API endpoint mapping here. The Create your account page appears. An example of a URL with a DC filled in is `https://dashboard-01.moengage.com/v4/#/auth/signup`
+2.  In the Company name (Workspace name) box, type your company name or workspace name. This workspace represents your company's data and configurations within MoEngage. For example, if you are "Acme Corp", you might name your workspace "Acme Corp Marketing".
+3.  In the Work email box, type your work email.
+4.  In the Password box, type your password. Ensure the password meets the following criteria:
+
+    *   Contains 8 to 20 characters.
+    *   Contains one capital letter.
+    *   Contains one number.
+    *   Contains one special character among !@#$%^&*()_?/,<>;:{}|~ and no space.
+5.  In the Subscription code box, type your subscription code.
+6.  Select the I agree to the Terms of use and Privacy policy check box.
+7.  Click Get Started. You are directed to the following page. MoEngage sends an email to your registered email address for verification.
+
+If you have not received an email to activate your account, click Resend Verification Email.
+
+Open the email you received from MoEngage and click the link to activate your account. After the verification, you are directed to the login page of the MoEngage dashboard.
+
+Using Your Google Accountlink
+
+To create a new account using your Google account:
+
+1.  Click Continue with Google.
+
+2.  On the Sign in with Google page, choose your Google account.
+
+3.  On the Sign in to moengage.com page, click Continue. The Finish signing up page appears.
+
+4.  In the Company name (Workspace name) box, type your company name or workspace name. This workspace represents your company's data and configurations within MoEngage. For example, if you are "Acme Corp", you might name your workspace "Acme Corp Marketing".
+
+5.  In the Subscription code box, type your subscription code.
+
+6.  Click Continue. You have now successfully created an account in MoEngage. You are directed to the login page of the MoEngage dashboard.
+
+Information
+MoEngage adds an extra layer of security to your account using 2-step verification. This helps protect your information from unauthorized access by requiring a second verification step during login. MoEngage enables 2-step verification by default to protect your account from unauthorized access using an authenticator app. When you try to log in, MoEngage prompts you to set up 2-step verification. You must configure a one-time verification setup on your device to proceed with login. For more information, refer to Set Up 2-Step Verification on Your Device.
+
+Next Stepslink
+
+You are the admin of this account or workspace. You must set up the workspace based on your business requirements.
+
+*   **Complete integrations:** Integrate MoEngage with your existing systems to start sending data. [link to integrations documentation]
+*   **Invite members:** Add your team members to collaborate on MoEngage. [link to inviting members documentation]
+*   **Configure settings for your workspace:** Customize your workspace settings to align with your business needs. [link to workspace configuration documentation]
+*   **Create campaigns:** Start engaging your customers with targeted campaigns. [link to creating campaigns documentation]

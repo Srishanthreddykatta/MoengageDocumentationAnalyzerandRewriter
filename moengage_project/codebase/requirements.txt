@@ -1,0 +1,8 @@
+requests
+beautifulsoup4
+google-generativeai
+markdown
+# Add other potential libraries like readability metrics if needed later
+
+
+playwright
