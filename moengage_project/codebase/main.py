@@ -24,8 +24,8 @@ SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 DEFAULT_OUTPUT_DIR = os.path.abspath(os.path.join(SCRIPT_DIR, "..", "output")) 
 
 def main():
-    parser = argparse.ArgumentParser(description="Analyze MoEngage documentation articles.")
-    parser.add_argument("url", help="The URL of the MoEngage documentation article to analyze.")
+    parser = argparse.ArgumentParser(description="Analyze documentation articles from any website.")
+    parser.add_argument("url", help="The URL of the documentation article to analyze.")
     parser.add_argument("-o", "--output", help=f"Directory to save the reports (default: adjacent 'output' folder)", default=DEFAULT_OUTPUT_DIR)
     # Add an option to control output format if desired (e.g., --format json/md/both)
     # parser.add_argument("--format", choices=["json", "md", "both"], default="both", help="Output format for the report")
@@ -37,8 +37,8 @@ def main():
 
     # --- Validate URL (basic check) ---
     parsed_url_check = urlparse(article_url)
-    if not parsed_url_check.scheme in ["http", "https"] or "help.moengage.com" not in parsed_url_check.netloc:
-        logging.error(f"Invalid URL provided: {article_url}. Please provide a valid MoEngage help article URL.")
+    if not parsed_url_check.scheme in ["http", "https"]:
+        logging.error(f"Invalid URL provided: {article_url}. Please provide a valid HTTP or HTTPS URL.")
         return
 
     # --- Ensure output directory exists ---

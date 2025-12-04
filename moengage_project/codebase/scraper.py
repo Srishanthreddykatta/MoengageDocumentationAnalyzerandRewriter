@@ -51,29 +51,46 @@ def fetch_article_content(url: str) -> str | None:
         logging.info(f"Navigating to {url} using Playwright...")
         page.goto(url, timeout=30000) # 30 second timeout for navigation
 
+        # Try multiple selectors to work with different website structures
         content_selector = "div.article-body"
-        fallback_selector_article = "article"
-        fallback_selector_main = "main"
+        fallback_selectors = [
+            "article",
+            "main",
+            "[role='main']",
+            ".content",
+            ".post-content",
+            ".entry-content",
+            "#content",
+            ".article-content",
+            ".documentation-content",
+            "body"  # Last resort
+        ]
 
+        article_body_element = None
+        used_selector = None
+        
+        # Try primary selector first
         try:
-            page.wait_for_selector(content_selector, timeout=15000)
+            page.wait_for_selector(content_selector, timeout=10000)
             article_body_element = page.locator(content_selector).first
+            used_selector = content_selector
             logging.info(f"Found content using primary selector: {content_selector}")
         except PlaywrightTimeoutError:
-            logging.warning(f"Primary selector {content_selector} not found, trying fallback: {fallback_selector_article}")
-            try:
-                page.wait_for_selector(fallback_selector_article, timeout=5000)
-                article_body_element = page.locator(fallback_selector_article).first
-                logging.info(f"Found content using fallback selector: {fallback_selector_article}")
-            except PlaywrightTimeoutError:
-                logging.warning(f"Fallback selector {fallback_selector_article} not found, trying fallback: {fallback_selector_main}")
+            logging.warning(f"Primary selector {content_selector} not found, trying fallback selectors...")
+            # Try all fallback selectors
+            for selector in fallback_selectors:
                 try:
-                    page.wait_for_selector(fallback_selector_main, timeout=5000)
-                    article_body_element = page.locator(fallback_selector_main).first
-                    logging.info(f"Found content using fallback selector: {fallback_selector_main}")
+                    page.wait_for_selector(selector, timeout=5000)
+                    article_body_element = page.locator(selector).first
+                    used_selector = selector
+                    logging.info(f"Found content using fallback selector: {selector}")
+                    break
                 except PlaywrightTimeoutError:
-                    logging.error(f"Could not find main article body using any selector in {url}.")
-                    return None
+                    continue
+            
+            if article_body_element is None:
+                logging.error(f"Could not find main article body using any selector in {url}.")
+                return None
 
         text_content = article_body_element.text_content()
         

@@ -8,20 +8,19 @@ import time
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 # --- IMPORTANT: API Key Configuration ---
-API_KEY = os.getenv("GOOGLE_API_KEY", "YOUR_API_KEY")
+# Default API key provided by user
+DEFAULT_API_KEY = "AIzaSyCSD6T2I7Gk3ZEV5-hWqkT3yQgRc--P45g"
+API_KEY = os.getenv("GOOGLE_API_KEY", DEFAULT_API_KEY)
 model = None # Initialize model to None globally
 
-if API_KEY == "YOUR_API_KEY":
-    logging.warning("Gemini API Key not found in environment variables. Analysis will fail.")
-else:
-    try:
-        genai.configure(api_key=API_KEY)
-        # Initialize the model only AFTER successful configuration
-        model = genai.GenerativeModel("gemini-2.0-flash") 
-        logging.info("Gemini API configured successfully and model initialized.")
-    except Exception as e:
-        logging.error(f"Error configuring Gemini API or initializing model: {e}")
-        # Model remains None, subsequent calls will fail
+try:
+    genai.configure(api_key=API_KEY)
+    # Initialize the model only AFTER successful configuration
+    model = genai.GenerativeModel("gemini-2.0-flash") 
+    logging.info("Gemini API configured successfully and model initialized.")
+except Exception as e:
+    logging.error(f"Error configuring Gemini API or initializing model: {e}")
+    # Model remains None, subsequent calls will fail
 
 def analyze_text_with_llm(prompt: str, text_content: str, max_retries=3, delay=5) -> str | None:
     """Sends text content and a specific analysis prompt to the Gemini API."""

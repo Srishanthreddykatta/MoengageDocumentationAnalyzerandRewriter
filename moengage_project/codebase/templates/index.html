@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation Analyzer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .input-section {
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        input[type="url"] {
+            flex: 1;
+            padding: 15px 20px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            transition: border-color 0.3s;
+        }
+        
+        input[type="url"]:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        button {
+            padding: 15px 40px;
+            font-size: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            font-weight: 600;
+        }
+        
+        button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .results.active {
+            display: block;
+        }
+        
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .tab {
+            padding: 15px 30px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+        
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: 600;
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .tab-content pre {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .tab-content.markdown {
+            background: white;
+            padding: 30px;
+        }
+        
+        .tab-content.markdown h1,
+        .tab-content.markdown h2,
+        .tab-content.markdown h3 {
+            margin-top: 20px;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .tab-content.markdown h1 {
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .tab-content.markdown ul,
+        .tab-content.markdown ol {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .tab-content.markdown li {
+            margin-bottom: 8px;
+        }
+        
+        .error {
+            background: #fee;
+            color: #c33;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #c33;
+        }
+        
+        .success-badge {
+            display: inline-block;
+            background: #4caf50;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+        
+        .score-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin: 5px;
+        }
+        
+        .score-good {
+            background: #4caf50;
+            color: white;
+        }
+        
+        .score-fair {
+            background: #ff9800;
+            color: white;
+        }
+        
+        .score-poor {
+            background: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📚 Documentation Analyzer</h1>
+            <p>Analyze any website's documentation for readability, structure, completeness, and style</p>
+        </div>
+        
+        <div class="content">
+            <div class="input-section">
+                <div class="input-group">
+                    <input 
+                        type="url" 
+                        id="urlInput" 
+                        placeholder="Enter any website URL (e.g., https://example.com/docs/article)"
+                        value=""
+                    >
+                    <button id="analyzeBtn" onclick="analyzeUrl()">Analyze</button>
+                </div>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Analyzing documentation... This may take a minute.</p>
+            </div>
+            
+            <div class="results" id="results">
+                <div class="success-badge">✓ Analysis Complete</div>
+                
+                <div class="tabs">
+                    <button class="tab active" onclick="switchTab('markdown')">Analysis Report</button>
+                    <button class="tab" onclick="switchTab('json')">JSON Data</button>
+                    <button class="tab" onclick="switchTab('revised')">Revised Content</button>
+                </div>
+                
+                <div id="markdownTab" class="tab-content markdown active"></div>
+                <div id="jsonTab" class="tab-content">
+                    <pre id="jsonContent"></pre>
+                </div>
+                <div id="revisedTab" class="tab-content markdown"></div>
+            </div>
+            
+            <div id="error" class="error" style="display: none;"></div>
+        </div>
+    </div>
+    
+    <script>
+        async function analyzeUrl() {
+            const urlInput = document.getElementById('urlInput');
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            const errorDiv = document.getElementById('error');
+            
+            const url = urlInput.value.trim();
+            
+            if (!url) {
+                errorDiv.textContent = 'Please enter a URL';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            // Reset UI
+            errorDiv.style.display = 'none';
+            results.classList.remove('active');
+            loading.classList.add('active');
+            analyzeBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ url: url })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+                
+                // Display results
+                if (data.markdown_report) {
+                    document.getElementById('markdownTab').innerHTML = convertMarkdown(data.markdown_report);
+                }
+                
+                if (data.json_report) {
+                    document.getElementById('jsonContent').textContent = JSON.stringify(data.json_report, null, 2);
+                }
+                
+                if (data.revised_content) {
+                    document.getElementById('revisedTab').innerHTML = convertMarkdown(data.revised_content);
+                } else {
+                    document.getElementById('revisedTab').innerHTML = '<p>Revised content is being generated. Please wait...</p>';
+                }
+                
+                results.classList.add('active');
+                
+            } catch (error) {
+                errorDiv.textContent = 'Error: ' + error.message;
+                errorDiv.style.display = 'block';
+            } finally {
+                loading.classList.remove('active');
+                analyzeBtn.disabled = false;
+            }
+        }
+        
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+        
+        function convertMarkdown(markdown) {
+            // Enhanced markdown to HTML converter
+            let html = markdown;
+            
+            // Code blocks (preserve)
+            html = html.replace(/```([\s\S]*?)```/g, '<pre><code>$1</code></pre>');
+            
+            // Inline code
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+            
+            // Headers (order matters - do h3 before h2, h2 before h1)
+            html = html.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+            html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+            html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
+            html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
+            
+            // Bold and italic
+            html = html.replace(/\*\*\*(.*?)\*\*\*/g, '<strong><em>$1</em></strong>');
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            
+            // Links
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+            
+            // Horizontal rules
+            html = html.replace(/^---$/gim, '<hr>');
+            html = html.replace(/^\*\*\*$/gim, '<hr>');
+            
+            // Lists - process line by line
+            const lines = html.split('\n');
+            let inList = false;
+            let listType = 'ul';
+            let result = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                
+                if (line.match(/^[-*+] /)) {
+                    if (!inList) {
+                        result.push('<ul>');
+                        inList = true;
+                        listType = 'ul';
+                    }
+                    result.push('<li>' + line.substring(2) + '</li>');
+                } else if (line.match(/^\d+\. /)) {
+                    if (!inList || listType !== 'ol') {
+                        if (inList) result.push('</' + listType + '>');
+                        result.push('<ol>');
+                        inList = true;
+                        listType = 'ol';
+                    }
+                    result.push('<li>' + line.replace(/^\d+\. /, '') + '</li>');
+                } else {
+                    if (inList) {
+                        result.push('</' + listType + '>');
+                        inList = false;
+                    }
+                    if (line && !line.match(/^<[h|p|d|h]/)) {
+                        result.push('<p>' + line + '</p>');
+                    } else if (line) {
+                        result.push(line);
+                    } else {
+                        result.push('');
+                    }
+                }
+            }
+            
+            if (inList) {
+                result.push('</' + listType + '>');
+            }
+            
+            html = result.join('\n');
+            
+            // Clean up empty paragraphs
+            html = html.replace(/<p><\/p>/g, '');
+            html = html.replace(/<p>\s*<\/p>/g, '');
+            
+            return html;
+        }
+        
+        // Allow Enter key to submit
+        document.getElementById('urlInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                analyzeUrl();
+            }
+        });
+    </script>
+</body>
+</html>
+

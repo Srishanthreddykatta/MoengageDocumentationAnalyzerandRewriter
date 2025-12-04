@@ -1,16 +1,8 @@
-# DocumentAnalysis
+# 📚 Documentation Analyzer
 
 A web application that analyzes documentation from any website for readability, structure, completeness, and style using Google's Gemini Flash 2.0 API.
 
-## Features
-
-- ✅ Accepts any website URL
-- ✅ Multi-dimensional analysis (Readability, Structure, Completeness, Style)
-- ✅ Beautiful web interface
-- ✅ Multiple output formats (Markdown, JSON, Revised Content)
-- ✅ Powered by Google Gemini Flash 2.0
-
-## Quick Start
+## 🚀 Quick Start
 
 ### Local Development
 
@@ -27,16 +19,34 @@ Open http://localhost:5000
 
 See `GITHUB_DEPLOYMENT.md` for deployment instructions.
 
-## Tech Stack
+## ✨ Features
+
+- ✅ Accepts any website URL
+- ✅ Multi-dimensional analysis (Readability, Structure, Completeness, Style)
+- ✅ Beautiful web interface
+- ✅ Multiple output formats (Markdown, JSON, Revised Content)
+- ✅ Powered by Google Gemini Flash 2.0
+
+## 📋 Requirements
+
+- Python 3.11+
+- Playwright browsers
+- Google API Key (pre-configured)
+
+## 🛠️ Tech Stack
 
 - **Backend:** Flask (Python)
 - **AI:** Google Gemini Flash 2.0
 - **Scraping:** Playwright
 - **Deployment:** Render/Railway/Codespaces ready
 
-## Documentation
+## 📖 Documentation
 
 - `GITHUB_DEPLOYMENT.md` - How to deploy and share
 - `DEPLOYMENT_GUIDE.md` - Detailed deployment options
 - `QUICK_DEPLOY.md` - Quick reference
-- `GITHUB_QUICK_START.md` - GitHub deployment guide
+
+## 📝 License
+
+This project is provided as-is for documentation analysis purposes.
+
